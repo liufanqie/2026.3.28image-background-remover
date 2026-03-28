@@ -1,18 +1,19 @@
 # Image Background Remover
 
-一个基于 Cloudflare Workers 和 remove.bg API 的在线图片背景移除工具。
+一个基于 Next.js + Tailwind CSS 和 remove.bg API 的在线图片背景移除工具。
 
 ## 功能特点
 
 - 🖼️ 支持拖拽上传图片
 - ⚡ 快速处理，实时预览
 - 📥 一键下载透明背景 PNG
-- 🌐 部署在 Cloudflare edge，全球加速
+- 🎨 现代化 UI，响应式设计
+- ☁️ 部署在 Cloudflare Pages，全球加速
 
 ## 技术栈
 
-- **前端**: HTML + CSS + JavaScript
-- **后端**: Cloudflare Workers
+- **前端**: Next.js 14 + TypeScript + Tailwind CSS
+- **后端**: Cloudflare Pages Functions
 - **API**: [remove.bg API](https://www.remove.bg/api)
 
 ## 快速开始
@@ -30,46 +31,65 @@ cd 2026.3.28image-background-remover
 npm install
 ```
 
-### 3. 配置 API Key
-
-在 Cloudflare Dashboard 中设置环境变量 `REMOVE_BG_API_KEY`，或直接修改 `wrangler.toml`:
-
-```toml
-[vars]
-REMOVE_BG_API_KEY = "your-api-key-here"
-```
-
-### 4. 本地开发
+### 3. 本地开发
 
 ```bash
 npm run dev
 ```
 
-### 5. 部署
+访问 http://localhost:3000
 
-```bash
-npm run deploy
-```
+> 注意：本地开发时 API 调用需要配置环境变量，或部署到 Cloudflare 后测试
 
-## 获取 remove.bg API Key
+### 4. 部署到 Cloudflare Pages
 
-1. 访问 [remove.bg](https://www.remove.bg/api)
-2. 注册账号
-3. 获取免费 API Key（每月 50 次免费调用）
+1. 将代码推送到 GitHub
+2. 在 Cloudflare Dashboard 中创建 Pages 项目
+3. 连接 GitHub 仓库
+4. 设置构建命令：`npm run build`
+5. 设置输出目录：`out`
+6. 添加环境变量：`REMOVE_BG_API_KEY`
+
+## 环境变量
+
+| 变量名 | 说明 | 获取方式 |
+|--------|------|----------|
+| `REMOVE_BG_API_KEY` | remove.bg API 密钥 | [获取地址](https://www.remove.bg/api) |
 
 ## 项目结构
 
 ```
-├── src/
-│   └── index.js          # Cloudflare Worker 代码
-├── public/
-│   ├── index.html        # 主页面
-│   ├── style.css         # 样式文件
-│   └── app.js            # 前端逻辑
-├── wrangler.toml         # Cloudflare 配置
-├── package.json          # 项目配置
-└── README.md             # 项目说明
+├── app/
+│   ├── layout.tsx       # 根布局
+│   ├── page.tsx         # 主页面
+│   └── globals.css      # 全局样式
+├── components/
+│   ├── UploadArea.tsx   # 上传区域组件
+│   ├── Preview.tsx      # 预览组件
+│   ├── Loading.tsx      # 加载组件
+│   └── ErrorMessage.tsx # 错误提示组件
+├── functions/
+│   └── api/
+│       └── remove.ts    # Cloudflare Pages Function
+├── next.config.js       # Next.js 配置
+├── tailwind.config.js   # Tailwind 配置
+├── tsconfig.json        # TypeScript 配置
+└── package.json         # 项目依赖
 ```
+
+## API 说明
+
+### POST /api/remove
+
+上传图片并返回去背景后的 PNG 图片。
+
+**请求：**
+- Content-Type: `multipart/form-data`
+- Body: `file` - 图片文件（JPG/PNG/WebP，最大 10MB）
+
+**响应：**
+- 成功：二进制 PNG 图片
+- 失败：`{ "error": "错误信息" }`
 
 ## License
 
