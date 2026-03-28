@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Background Remover</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🖼️ Image Background Remover</h1>
+      <p class="subtitle">快速移除图片背景，支持 JPG、PNG、WebP 格式</p>
+    </header>
+
+    <main>
+      <!-- Upload Area -->
+      <div id="uploadArea" class="upload-area">
+        <div class="upload-content">
+          <div class="upload-icon">📁</div>
+          <p>拖拽图片到这里，或点击选择文件</p>
+          <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" hidden>
+          <button id="selectBtn" class="btn btn-primary">选择图片</button>
+        </div>
+      </div>
+
+      <!-- Loading -->
+      <div id="loadingArea" class="loading-area hidden">
+        <div class="spinner"></div>
+        <p>正在处理中...</p>
+      </div>
+
+      <!-- Preview Area -->
+      <div id="previewArea" class="preview-area hidden">
+        <div class="preview-container">
+          <div class="preview-box">
+            <h3>原图</h3>
+            <img id="originalImage" src="" alt="原图">
+          </div>
+          <div class="preview-box">
+            <h3>去背景后</h3>
+            <div class="transparent-bg">
+              <img id="processedImage" src="" alt="去背景后">
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button id="downloadBtn" class="btn btn-success">📥 下载图片</button>
+          <button id="resetBtn" class="btn btn-secondary">🔄 重新上传</button>
+        </div>
+      </div>
+
+      <!-- Error Area -->
+      <div id="errorArea" class="error-area hidden">
+        <p class="error-message">❌ <span id="errorMessage"></span></p>
+        <button id="retryBtn" class="btn btn-secondary">重试</button>
+      </div>
+    </main>
+
+    <footer>
+      <p>Powered by <a href="https://www.remove.bg/api" target="_blank">remove.bg API</a></p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
