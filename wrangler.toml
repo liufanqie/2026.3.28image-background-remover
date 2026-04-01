@@ -1,0 +1,14 @@
+name = "image-bg-remover-v2"
+compatibility_date = "2024-01-01"
+pages_build_output_dir = "out"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "image-bg-remover-db"
+database_id = "0a479d03-47ff-4549-bf26-0df5f4d2ef7c"
+
+[vars]
+# Set these in Cloudflare Dashboard - Workers & Pages - Settings - Environment variables
+# GOOGLE_CLIENT_ID = "your-google-client-id"
+# GOOGLE_CLIENT_SECRET = "your-google-client-secret"
+# REMOVE_BG_API_KEY = "your-remove-bg-api-key"

@@ -5,6 +5,7 @@ import UploadArea from '@/components/UploadArea';
 import Preview from '@/components/Preview';
 import Loading from '@/components/Loading';
 import ErrorMessage from '@/components/ErrorMessage';
+import UserMenu from '@/components/UserMenu';
 
 type AppState = 'upload' | 'loading' | 'preview' | 'error';
 
@@ -87,6 +88,11 @@ export default function Home() {
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <header className="text-center mb-10">
+          {/* User Menu */}
+          <div className="flex justify-end mb-4">
+            <UserMenu />
+          </div>
+
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 drop-shadow-lg">
             🖼️ Image Background Remover
           </h1>
