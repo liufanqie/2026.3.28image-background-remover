@@ -7,7 +7,7 @@ interface Env {
   GOOGLE_CLIENT_ID: string;
   GOOGLE_CLIENT_SECRET: string;
   NEXTAUTH_SECRET: string;
-  DB: D1Database;
+  DB: any;
 }
 
 function generateState(): string {
@@ -24,7 +24,7 @@ async function signState(state: string, secret: string): Promise<string> {
     ['sign']
   );
   const signature = await crypto.subtle.sign('HMAC', key, encoder.encode(state));
-  return btoa(String.fromCharCode(...new Uint8Array(signature)));
+  return btoa(String.fromCharCode.apply(null, Array.from(new Uint8Array(signature))));
 }
 
 export async function onRequestGet(context: { env: Env; request: Request }) {

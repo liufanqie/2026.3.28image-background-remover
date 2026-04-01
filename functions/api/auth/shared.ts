@@ -3,7 +3,7 @@
  */
 
 export interface Env {
-  DB: D1Database;
+  DB: any;
   GOOGLE_CLIENT_ID: string;
   GOOGLE_CLIENT_SECRET: string;
   REMOVE_BG_API_KEY: string;
