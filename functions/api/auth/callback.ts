@@ -36,12 +36,15 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
     return Response.redirect(new URL('/?error=' + encodeURIComponent(error), request.url));
   }
 
-  // Validate state
+  // Validate state - state from URL is "uuid.signature", cookie only has "uuid"
   const cookieHeader = request.headers.get('Cookie') || '';
   const stateCookie = cookieHeader.split(';').find(c => c.trim().startsWith('oauth_state='));
   const savedState = stateCookie?.split('=')[1];
 
-  if (!state || state !== savedState) {
+  // Extract the uuid part from the state parameter (format: uuid.signature)
+  const stateUuid = state ? state.split('.')[0] : null;
+
+  if (!stateUuid || stateUuid !== savedState) {
     return Response.redirect(new URL('/?error=invalid_state', request.url));
   }
 
