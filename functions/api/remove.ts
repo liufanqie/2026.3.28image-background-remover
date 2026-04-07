@@ -3,9 +3,11 @@
  * This function runs on Cloudflare edge when deployed
  */
 
+import { Env, getSessionUser } from './auth/shared';
+
 export async function onRequestPost(context: {
   request: Request;
-  env: { REMOVE_BG_API_KEY: string };
+  env: Env;
 }) {
   const { request, env } = context;
 
@@ -15,6 +17,34 @@ export async function onRequestPost(context: {
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
   };
+
+  // Check authentication
+  const sessionUser = getSessionUser(request);
+  if (!sessionUser) {
+    return new Response(JSON.stringify({ error: '请先登录后再使用', code: 'NOT_AUTHENTICATED' }), {
+      status: 401,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+  }
+
+  // Check free credits
+  let freeCredits = 0;
+  try {
+    const row = await env.DB
+      .prepare('SELECT free_credits FROM users WHERE id = ?')
+      .bind(sessionUser.userId)
+      .first();
+    freeCredits = row?.free_credits ?? 0;
+  } catch {
+    freeCredits = 0;
+  }
+
+  if (freeCredits <= 0) {
+    return new Response(JSON.stringify({ error: '免费次数已用完', code: 'NO_CREDITS', freeCredits: 0 }), {
+      status: 403,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+  }
 
   try {
     // Parse multipart form data
@@ -56,6 +86,12 @@ export async function onRequestPost(context: {
         { status: apiResponse.status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
+
+    // Deduct credit after successful processing
+    await env.DB
+      .prepare('UPDATE users SET free_credits = free_credits - 1 WHERE id = ?')
+      .bind(sessionUser.userId)
+      .run();
 
     // Return the processed image
     const imageData = await apiResponse.arrayBuffer();

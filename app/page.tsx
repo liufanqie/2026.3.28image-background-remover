@@ -15,6 +15,7 @@ export default function Home() {
   const [originalUrl, setOriginalUrl] = useState<string>('');
   const [processedUrl, setProcessedUrl] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [needLogin, setNeedLogin] = useState(false);
 
   const validateFile = (file: File): string | null => {
     const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
@@ -55,6 +56,9 @@ export default function Home() {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({ error: `HTTP ${response.status}` }));
+        if (response.status === 401) {
+          setNeedLogin(true);
+        }
         throw new Error(errorData.error || '处理失败');
       }
 
@@ -80,6 +84,7 @@ export default function Home() {
     setOriginalUrl('');
     setProcessedUrl('');
     setErrorMessage('');
+    setNeedLogin(false);
     setState('upload');
   }, []);
 
@@ -123,10 +128,22 @@ export default function Home() {
           )}
 
           {state === 'error' && (
-            <ErrorMessage
-              message={errorMessage}
-              onRetry={handleReset}
-            />
+            <div>
+              <ErrorMessage
+                message={errorMessage}
+                onRetry={handleReset}
+              />
+              {needLogin && (
+                <div className="text-center mt-4">
+                  <a
+                    href="/api/auth/login"
+                    className="inline-flex items-center gap-2 px-6 py-2.5 bg-blue-500 text-white rounded-lg font-medium hover:bg-blue-600 transition-colors"
+                  >
+                    登录 Google 获取免费次数
+                  </a>
+                </div>
+              )}
+            </div>
           )}
         </div>
 

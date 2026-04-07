@@ -107,7 +107,7 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
       // Create new user
       userId = crypto.randomUUID();
       await db
-        .prepare('INSERT INTO users (id, name, email, image, emailVerified) VALUES (?, ?, ?, ?, ?)')
+        .prepare('INSERT INTO users (id, name, email, image, emailVerified, free_credits) VALUES (?, ?, ?, ?, ?, 5)')
         .bind(userId, userInfo.name || userInfo.email, userInfo.email, userInfo.picture, new Date().toISOString())
         .run();
     }

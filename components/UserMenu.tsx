@@ -7,6 +7,7 @@ interface User {
   name: string;
   email: string;
   image: string | null;
+  freeCredits: number;
 }
 
 export default function UserMenu() {
@@ -74,6 +75,9 @@ export default function UserMenu() {
           </div>
         )}
         <span className="text-white text-sm font-medium hidden sm:inline">{user.name}</span>
+        <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${user.freeCredits > 0 ? 'bg-green-500/20 text-green-300' : 'bg-red-500/20 text-red-300'}`}>
+          {user.freeCredits > 0 ? `剩余 ${user.freeCredits} 次` : '次数已用完'}
+        </span>
       </div>
       <button
         onClick={handleLogout}
