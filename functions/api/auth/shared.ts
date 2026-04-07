@@ -39,7 +39,7 @@ export function getSessionUser(request: Request): SessionUser | null {
 
   try {
     const sessionValue = sessionCookie.split('=')[1];
-    const decoded = atob(sessionValue);
+    const decoded = decodeURIComponent(atob(sessionValue));
     const session = JSON.parse(decoded) as SessionUser & { exp: number };
 
     // Check expiration

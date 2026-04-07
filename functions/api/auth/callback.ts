@@ -113,13 +113,14 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
     }
 
     // Create session token (JWT-like, simplified)
-    const sessionToken = btoa(JSON.stringify({
+    // Use encodeURIComponent + btoa to handle non-ASCII characters (e.g. Chinese names)
+    const sessionToken = btoa(encodeURIComponent(JSON.stringify({
       userId,
       email: userInfo.email,
       name: userInfo.name,
       picture: userInfo.picture,
       exp: Date.now() + 7 * 24 * 60 * 60 * 1000, // 7 days
-    }));
+    })));
 
     // Redirect to home with session cookie
     const headers = new Headers();
